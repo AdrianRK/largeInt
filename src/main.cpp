@@ -47,7 +47,6 @@ private:
 public:
 	largeInt();
 	largeInt(const largeInt&);
-	//largeInt(const std::initializer_list <long long> & init);
 	largeInt(const std::string &);
 	largeInt(largeInt&&);
 	largeInt(long long);
@@ -303,6 +302,7 @@ largeInt & largeInt::operator=(largeInt&& nr)
 	size = size;
 	maxSize = nr.maxSize;
 	sign = nr.sign;
+	return *this;
 }
 
 bool largeInt::operator== (const largeInt & nr) const
@@ -798,13 +798,14 @@ const largeInt operator/(const largeInt &a, const largeInt &b)
 	else
 	{
 		largeInt c{};
-		largeInt::dataSizeType start = a.size - b.size;
-		bool flag = 0;
+		//largeInt::dataSizeType start = a.size - b.size;
+		//bool flag = 0;
 		for (largeInt::dataSizeType it = a.size; it > a.size; ++it)
 		{
 			
 		}
 	}
+	return largeInt{};
 	
 }
 const largeInt operator/(long long a, const largeInt &b)
@@ -830,6 +831,7 @@ const largeInt operator%(const largeInt &a, const largeInt &b)
 	{
 	
 	}
+	return largeInt {};
 }
 
 const largeInt operator%(long long a, const largeInt &b)
