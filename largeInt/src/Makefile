@@ -1,28 +1,38 @@
 ####################################################################################################
 #                                     Make file LargeInt 	                                   #
 ####################################################################################################
-CFLAGS:=-c -Wall --std=c++1y 
-SOURCES:=main.cpp
+CFLAGS:=-c -Wall --std=c++1y -fPIC
+SOURCES:=largeInt.cpp
 OBJDIR:=../../obj
 BINDIR:=../../bin
 LIBDIR:=../../lib
-LDFLAGS:=
+LDFLAGS:= -shared -fPIC
 OBJECTS:=$(SOURCES:.cpp=.o)
 CC:=g++
-EXECUTABLE:=largeInt
+#EXECUTABLE:=largeInt
+MAJOR:= 0
+MINOR:= 1
+NAME:= largeInt
+VERSION := $(MAJOR).$(MINOR)
 
-all: clean MAKEDIR $(SOURCES) $(EXECUTABLE) 
+all: clean MAKEDIR $(SOURCES) lib
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJDIR)/$(OBJECTS) -o $(BINDIR)/$@ 
+lib: lib$(NAME).so.$(VERSION)
+
+lib$(NAME).so.$(VERSION): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJDIR)/$(OBJECTS) -o $(LIBDIR)/$@ 
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $(OBJDIR)/$@
 
 clean:
-	rm -rf $(BINDIR)/$(EXECUTABLE) $(OBJDIR)/$(OBJECTS)
+	rm -rf $(LIBDIR)/lib$(NAME).so* $(OBJDIR)/$(OBJECTS)
 
 MAKEDIR:
 	mkdir -p $(OBJDIR)
 	mkdir -p $(BINDIR)
 	mkdir -p $(LIBDIR)
+
+install: all
+	ln -sf lib$(NAME).so.$(VERSION) $(LIBDIR)/lib$(NAME).so.$(MAJOR)
+	ln -sf lib$(NAME).so.$(VERSION) $(LIBDIR)/lib$(NAME).so
