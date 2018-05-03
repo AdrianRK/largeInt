@@ -3,9 +3,9 @@
 ####################################################################################################
 CFLAGS:=-c -Wall --std=c++1y 
 SOURCES:=main.cpp
-OBJDIR:=../obj
-BINDIR:=../bin
-LIBDIR:=../lib
+OBJDIR:=../../obj
+BINDIR:=../../bin
+LIBDIR:=../../lib
 LDFLAGS:=
 OBJECTS:=$(SOURCES:.cpp=.o)
 CC:=g++

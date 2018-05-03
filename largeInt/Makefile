@@ -2,7 +2,7 @@
 #                                     Make file LargeInt 	                                   #
 ####################################################################################################
 
-SUBDIRS:= largeInt
+SUBDIRS:= src
      
 subdirs:
 	for dir in $(SUBDIRS); do \
