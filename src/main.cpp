@@ -17,27 +17,40 @@
 #include <fstream>
 
 std::ofstream lout("output.log");  
-void print()
+void _print()
 {
 	lout << "\n";
 }
 
 
 template <typename T, typename... pack>
-void print ( const T& arg, const pack&... args )
+void _print ( const T& arg, const pack&... args )
 {
 	lout << arg;
-	print(args...);
+	_print(args...);
 	return ;
 }		/* -----  end of template function print  ----- */
 
-#define Print(...) print("[Function: ", __FUNCTION__, "]:[Line:  ", __LINE__, "]: ", __VA_ARGS__)
+#define Print(...) _print("[Function: ", __FUNCTION__, "]:[Line:  ", __LINE__, "]: ", __VA_ARGS__)
 //#define Print(...)
 
 class largeInt;
 
 std::ostream& operator << (std::ostream &stm, const largeInt& nr);
 std::istream& operator >> (std::istream &stm, largeInt& nr);
+
+template <typename T, typename op, typename size>
+bool compare(const T & a, const T & b, const op& cmp, const size &sz)
+{
+	for (size it = sz; it > 0; --it)	
+	{
+		if (!cmp (a[it-1], b[it-1]))
+		{
+			return false;
+		}
+	}
+	return true;
+}
 
 class largeInt
 {
@@ -118,7 +131,13 @@ private:
 		positive,
 		negative	
 	};
-	
+
+	enum class devType
+	{
+		devider,
+		remainder
+	};
+		
 	void grow();
 	void trim();
 	void add(long long nr);
@@ -126,12 +145,26 @@ private:
 	void inc();
 	void dec();
 	void add(const std::string&);
+	const static largeInt devide (const largeInt &a, const largeInt &b, const devType tp);
+	void PrintDBG() const;
 	dataType * number;
 	dataSizeType size;
 	dataSizeType maxSize;
 	sign_t sign;
 	static constexpr dataSizeType DATA_SIZE = 100;
 };
+
+void largeInt::PrintDBG() const
+{
+	lout << "Size " << size << " MaxSize " << maxSize << "\n";
+
+	for (dataSizeType it = 0; it < maxSize; ++it)
+	{
+		lout << number[it] << " ";
+	}
+	lout << "\n";
+}
+
 
 std::string largeInt::serialize() const
 {
@@ -784,34 +817,89 @@ const largeInt operator*(const largeInt &a, long long b)\
 {
 	return largeInt{b} * a;
 }
-	
-const largeInt operator/(const largeInt &a, const largeInt &b)
+
+const largeInt largeInt::devide (const largeInt &a, const largeInt &b, const devType tp)
 {
-	if (a < b)
+	auto cmp = [] (int a1, int b1) { return (a1 >= b1 ? true : false);};
+	largeInt c{a}, ret{};
+	ret.reset();
+	std::vector<largeInt::dataType> div;
+	for (largeInt::dataSizeType it = a.size - b.size + 1; it > 0; --it)
 	{
-		return 0;
+		largeInt::dataType dg = 0;
+		largeInt::dataType rest = 0;
+		while ((c.size - it + 1 > b.size) || (c.size - it + 1 == b.size && compare(c.number + (c.size - b.size), b.number, cmp, b.size)))
+		{		
+			rest = 0;
+			for (largeInt::dataSizeType cit = 0; cit != b.size; ++cit)
+			{
+				if (c.number[cit + it - 1] < rest + b.number[cit])
+				{
+					c.number[cit + it - 1] = 10 + c.number[cit + it - 1] - rest - b.number[cit];
+					rest = 1;
+				}
+				else
+				{
+					c.number[cit + it - 1] = c.number[cit + it - 1] - rest - b.number[cit];
+					rest = 0;
+				}
+			}
+			if (c.size - it + 1 > b.size)
+			{
+				c.number[c.size - 1] -= rest;
+			}
+			c.trim();
+			dg++;	
+		}
+		if (tp == devType::devider)
+		{
+			if (0 != dg || div.size())
+			{
+				div.push_back(dg);
+			}
+		}
 	}
-	else if (a == b)
+	if (tp == devType::devider)
 	{
-		return 1;
+		for (auto it = div.crbegin(); it != div.crend(); ++it)
+		{
+			ret.add(*it);
+		}
+		if (ret.size == 0)
+		{
+			ret.add(0);
+		}
+		return ret;
 	}
 	else
 	{
-		largeInt c{};
-		//largeInt::dataSizeType start = a.size - b.size;
-		//bool flag = 0;
-		for (largeInt::dataSizeType it = a.size; it > a.size; ++it)
-		{
-			
-		}
+		return c;
+	}
+}
+	
+const largeInt operator/(const largeInt &a, const largeInt &b)
+{
+	Print ("");
+	if (a < b)
+	{
+		return largeInt{0};
+	}
+	else if (a == b)
+	{
+		return largeInt{1};
+	}
+	else
+	{
+		return largeInt::devide(a, b, largeInt::devType::devider);
 	}
 	return largeInt{};
-	
 }
+
 const largeInt operator/(long long a, const largeInt &b)
 {
 	return largeInt {a} / b;
 }
+
 const largeInt operator/(const largeInt &a, long long b)
 {
 	return a / largeInt {b};
@@ -829,7 +917,7 @@ const largeInt operator%(const largeInt &a, const largeInt &b)
 	}
 	else
 	{
-	
+		return largeInt::devide(a, b, largeInt::devType::remainder);
 	}
 	return largeInt {};
 }
@@ -888,16 +976,19 @@ void largeInt::dec()
 
 void largeInt::trim()
 {
+	Print("");
 	if (size == 1)
 	{
 		return;
 	}
 
 	dataSizeType count = 0;
-
+	Print("size ", size);
 	for (dataSizeType ct = size; ct > 0; --ct)
 	{
-		if (0 ==  number[ct])
+		Print("ct ", ct);
+		Print("number[ct-1] ", number[ct - 1]);
+		if (0 == number[ct-1])
 		{
 			count++;
 		}
@@ -906,10 +997,10 @@ void largeInt::trim()
 			break;
 		}
 	}
-
+	Print("count ", count);
 	if (count)
 	{
-		size -= (count - 1);
+		size -= count;
 	}
 }
 
@@ -939,6 +1030,10 @@ std::string interpret(const std::string &s)
 	else if (op =="-")
 	{
 		return (a - b).serialize();
+	}
+	else if (op == "/")
+	{	
+		return (a / b).serialize();
 	}
 	else if (op == "%")
 	{
@@ -1015,6 +1110,11 @@ int main(int argc, char** argv)
 	std::cout << (largeInt {1} > largeInt {11} ? "True":"False") << "\n"; 
 	std::cout << (largeInt {22} > largeInt {11} ? "True":"False") << "\n"; 
 */
+
+	//int a[] = {1, 1, 1, 4, 5, 6, 7};
+	//int b[] = {1, 2, 3, 4, 5, 6, 7};
+	//std::cout << (compare(a,b,cmp,7)? "True":"False") << "\n";
+	
 
 	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
 
