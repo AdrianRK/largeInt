@@ -6,15 +6,16 @@ SOURCES:=main.cpp
 OBJDIR:=../../obj
 BINDIR:=../../bin
 LIBDIR:=../../lib
-LDFLAGS:=-L$(LIBDIR) -llargeInt
+LDFLAGS:=-L$(LIBDIR) 
 OBJECTS:=$(SOURCES:.cpp=.o)
 CC:=g++
 EXECUTABLE:=parser
+LIBRARIES:= -llargeInt
 
 all: clean MAKEDIR $(SOURCES) $(EXECUTABLE) 
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJDIR)/$(OBJECTS) -o $(BINDIR)/$@ 
+	$(CC) $(LDFLAGS) $(OBJDIR)/$(OBJECTS) -o $(BINDIR)/$@ $(LIBRARIES)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $(OBJDIR)/$@

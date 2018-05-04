@@ -36,3 +36,4 @@ MAKEDIR:
 install: all
 	ln -sf lib$(NAME).so.$(VERSION) $(LIBDIR)/lib$(NAME).so.$(MAJOR)
 	ln -sf lib$(NAME).so.$(VERSION) $(LIBDIR)/lib$(NAME).so
+	export LD_LIBRARY_PATH=$(shell pwd)/$(LIBDIR):$(echo $LD_LIBRARY_PATH)

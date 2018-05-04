@@ -10,7 +10,8 @@
 #include <typeinfo>
 #include <cctype>
 #include <exception>
-
+#include <iostream>
+#include <sstream>
 #include "../inc/largeInt.hpp"
 #include "../inc/log.hpp"
 

@@ -114,25 +114,6 @@ int main(int argc, char** argv)
 	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
 	process();	
-	//std::cout << (largeInt {1} < largeInt {1} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {2} < largeInt {1} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {1} < largeInt {2} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {11} < largeInt {2} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {1} < largeInt {11} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {22} < largeInt {11} ? "True":"False") << "\n"; 
-
-	//std::cout << (largeInt {1} > largeInt {1} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {2} > largeInt {1} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {1} > largeInt {2} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {11} > largeInt {2} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {1} > largeInt {11} ? "True":"False") << "\n"; 
-	//std::cout << (largeInt {22} > largeInt {11} ? "True":"False") << "\n"; 
-
-
-	//int a[] = {1, 1, 1, 4, 5, 6, 7};
-	//int b[] = {1, 2, 3, 4, 5, 6, 7};
-	//std::cout << (compare(a,b,cmp,7)? "True":"False") << "\n";
-	
 
 	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
 
