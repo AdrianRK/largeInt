@@ -2,7 +2,7 @@
 #                                     Make file LargeInt 	                                   #
 ####################################################################################################
 
-SUBDIRS:= largeInt
+SUBDIRS:= largeInt parser
      
 subdirs:
 	for dir in $(SUBDIRS); do \

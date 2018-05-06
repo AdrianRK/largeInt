@@ -15,7 +15,7 @@ MINOR:= 1
 NAME:= largeInt
 VERSION := $(MAJOR).$(MINOR)
 
-all: clean MAKEDIR $(SOURCES) lib
+all: clean MAKEDIR $(SOURCES) lib install
 
 lib: lib$(NAME).so.$(VERSION)
 
@@ -33,7 +33,7 @@ MAKEDIR:
 	mkdir -p $(BINDIR)
 	mkdir -p $(LIBDIR)
 
-install: all
+install:
 	ln -sf lib$(NAME).so.$(VERSION) $(LIBDIR)/lib$(NAME).so.$(MAJOR)
 	ln -sf lib$(NAME).so.$(VERSION) $(LIBDIR)/lib$(NAME).so
 	export LD_LIBRARY_PATH=$(shell pwd)/$(LIBDIR):$(echo $LD_LIBRARY_PATH)
