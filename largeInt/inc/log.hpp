@@ -20,7 +20,7 @@
 #define LARGEINT_INC_LOGGING_HELPER_HPP
 
 #include <fstream>
-
+#include <iostream>
 std::ofstream lout("output.log");
 
 void _print()
@@ -37,7 +37,7 @@ void _print ( const T& arg, const pack&... args )
         return ;
 }               /* -----  end of template function print  ----- */
 
-#ifdef DEBUG
+#ifdef __DEBUG__D
 #define Print(...) _print("[Function: ", __FUNCTION__, "]:[Line:  ", __LINE__, "]: ", __VA_ARGS__)
 #else
 #define Print(...)

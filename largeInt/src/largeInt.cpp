@@ -193,7 +193,7 @@ const largeInt & largeInt::operator=(const largeInt& nr)
 largeInt & largeInt::operator=(largeInt&& nr)
 {
 	std::swap(this->number, nr.number);
-	size = size;
+	size = nr.size;
 	maxSize = nr.maxSize;
 	sign = nr.sign;
 	return *this;
