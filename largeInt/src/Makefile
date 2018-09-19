@@ -36,4 +36,7 @@ MAKEDIR:
 install:
 	ln -sf lib$(NAME).so.$(VERSION) $(LIBDIR)/lib$(NAME).so.$(MAJOR)
 	ln -sf lib$(NAME).so.$(VERSION) $(LIBDIR)/lib$(NAME).so
+	sudo cp $(LIBDIR)/lib$(NAME).so /usr/lib/
+	sudo cp $(LIBDIR)/lib$(NAME).so.$(VERSION) /usr/lib/
+	sudo cp $(LIBDIR)/lib$(NAME).so.$(MAJOR) /usr/lib/
 	export LD_LIBRARY_PATH=$(shell pwd)/$(LIBDIR):$(echo $LD_LIBRARY_PATH)
